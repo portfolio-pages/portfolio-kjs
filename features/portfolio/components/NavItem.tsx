@@ -15,18 +15,16 @@ export function NavItem({ title, hashtags, isFocus = false, onClick }: NavItemPr
     <div
       onClick={onClick}
       className={cn(
-        "w-full px-4 py-3 rounded-lg cursor-pointer transition-all",
+        "w-full px-5 py-3 hover:scale-104 border-[0px] border-solid border-transparent cursor-pointer transition-all",
         "flex items-center justify-between gap-4",
-        isFocus
-          ? "bg-gray-100"
-          : "hover:bg-gray-50"
+        isFocus && "border-[1px] border-[#EAEAEA] rounded-xl"
       )}
     >
       <div className="flex-1 min-w-0">
         <div
           className={cn(
             "text-sm font-bold mb-1 truncate",
-            isFocus ? "text-[lab(50.1%_30.1_-80.0)]" : "text-gray-900"
+            isFocus ? "text-[#0080FF]" : "text-gray-900"
           )}
         >
           {title}

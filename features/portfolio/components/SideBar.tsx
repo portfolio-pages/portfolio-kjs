@@ -53,7 +53,7 @@ export function SideBar({
   return (
     <div
       className={cn(
-        "w-72 h-screen flex flex-col gap-4",
+        "w-72 h-screen flex flex-col gap-4 select-none",
         className
       )}
     >
