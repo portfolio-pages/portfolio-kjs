@@ -53,7 +53,7 @@ export function SideBar({
   return (
     <div
       className={cn(
-        "w-64 h-screen flex flex-col",
+        "w-72 h-screen flex flex-col gap-4",
         className
       )}
     >
@@ -62,30 +62,32 @@ export function SideBar({
         <ProfileCard profileImage={profileImage} name={name} year={year} />
       </div>
 
-      {/* Search Block */}
-      <div className="px-5 pb-4">
-        <SearchBlock
-          value={localSearchQuery}
-          onChange={handleSearchChange}
-        />
-      </div>
-
-      {/* Navigation Sections */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-0">
-          {sections.map((section) => (
-            <NavSection
-              key={section.id}
-              sectionName={section.name}
-              status={section.status}
-              items={section.items}
-              selectedItemId={selectedItemId}
-              onSectionToggle={() => handleSectionToggle(section.id)}
-              onItemClick={onItemClick}
-            />
-          ))}
+      <section className="flex-1 flex flex-col min-h-0">
+        {/* Search Block */}
+        <div className="px-5 pb-4 flex-shrink-0">
+          <SearchBlock
+            value={localSearchQuery}
+            onChange={handleSearchChange}
+          />
         </div>
-      </div>
+
+        {/* Navigation Sections */}
+        <section className="flex-1 overflow-y-auto min-h-0">
+          <section className="flex flex-col gap-4 pb-4">
+            {sections.map((section) => (
+              <NavSection
+                key={section.id}
+                sectionName={section.name}
+                status={section.status}
+                items={section.items}
+                selectedItemId={selectedItemId}
+                onSectionToggle={() => handleSectionToggle(section.id)}
+                onItemClick={onItemClick}
+              />
+            ))}
+          </section>
+        </section>
+      </section>
     </div>
   );
 }

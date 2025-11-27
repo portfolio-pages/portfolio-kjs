@@ -17,7 +17,7 @@ export function NavSectionTitle({ sectionName, status, onClick }: NavSectionTitl
       onClick={onClick}
       className={cn(
         "flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-colors",
-        isOpened && "bg-gray-50"
+        isOpened && "bg-[#f5f5f5]"
       )}
     >
       {isOpened ? (

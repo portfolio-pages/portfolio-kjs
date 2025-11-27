@@ -19,7 +19,7 @@ export function ProfileCard({
   return (
     <div
       className={cn(
-        "w-full rounded-[24px] px-4 py-3",
+        "w-full h-fit rounded-[24px] px-4 py-4",
         "flex items-center gap-3",
         "bg-[#f5f5f5]",
         className
@@ -37,13 +37,14 @@ export function ProfileCard({
       ) : (
         <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-200" />
       )}
-      <div className="flex flex-col justify-center min-w-0 flex-1">
-        <h1 className="text-lg font-bold text-gray-900 leading-tight">
+      <div className="flex flex-col justify-center min-w-0 flex-1 gap-2">
+        <h1 className="text-xl font-bold text-gray-900 leading-tight">
           Portfolio
         </h1>
-        <p className="text-sm text-gray-900 leading-tight">
-          {name} {year}
-        </p>
+        <div className="flex gap-4">
+          <span className="text-[12px] text-gray-900 leading-tight">{name}</span>
+          <span className="text-[12px] text-gray-900 leading-tight">{year}</span>
+        </div>
       </div>
     </div>
   );

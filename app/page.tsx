@@ -44,13 +44,65 @@ export default function Home() {
       id: "section-b",
       name: "#섹션_B",
       status: "closed",
-      items: [],
+      items: [
+        {
+          id: "1",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "2",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "3",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "4",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "5",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+      ]
     },
     {
       id: "section-c",
       name: "#섹션_C",
       status: "closed",
-      items: [],
+      items: [
+        {
+          id: "1",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "2",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "3",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "4",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+        {
+          id: "5",
+          title: "겁나게_기깔나는_포폴_이름",
+          hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+        },
+      ]
     },
   ]);
 
