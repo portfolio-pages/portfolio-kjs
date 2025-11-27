@@ -130,7 +130,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#fafafa]">
+    <div className="flex h-screen overflow-hidden bg-[#fafafa] px-4 py-4 box-border">
       {/* SideBar */}
       <SideBar
         name="Jinseo Kim"
