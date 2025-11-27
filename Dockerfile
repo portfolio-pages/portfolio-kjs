@@ -8,7 +8,6 @@ RUN corepack enable && corepack prepare yarn@1.22.18 --activate
 
 # Copy package files
 COPY package.json yarn.lock .yarnrc.yml* ./
-COPY .yarn ./.yarn
 
 # Install dependencies
 RUN yarn install --frozen-lockfile

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { SideBarSection, NavSectionItem } from "@/features/portfolio/components/SideBar";
+import type { SideBarSection } from "@/features/portfolio/components/SideBar";
+import type { NavSectionItem } from "@/features/portfolio/components";
 
 interface Section {
   id: string;
