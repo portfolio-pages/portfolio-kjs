@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { SideBar, type SideBarSection } from "@/features/portfolio/components/SideBar";
+import { PortfolioHeader } from "@/features/portfolio/components/PortfolioHeader";
+import { ContentBlock } from "@/features/portfolio/components/ContentBlock";
 import type { NavSectionItem } from "@/features/portfolio/components";
 
 export default function Home() {
@@ -146,14 +148,39 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-[#fafafa]">
         <div className="p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            포트폴리오 비디오
-          </h1>
-          <p className="text-gray-600">
-            {selectedItemId
-              ? `선택된 아이템: ${selectedItemId}`
-              : "왼쪽 사이드바에서 포트폴리오를 선택하세요."}
-          </p>
+          {selectedItemId ? (
+            <div className="flex flex-col gap-8">
+              <PortfolioHeader
+                title="겁나게_기깔나는_포폴_이름"
+                createdAt="Nov 25, 2025"
+                joinRole="Developer"
+              />
+              
+              <ContentBlock
+                title="Description"
+                subtitle="작품 소개"
+              >
+                <div className="rounded-lg bg-white p-6 min-h-[200px]">
+                  {/* Description content will go here */}
+                </div>
+              </ContentBlock>
+
+              <ContentBlock
+                title="Content"
+                subtitle="작품 내용"
+              >
+                <div className="rounded-lg bg-white p-6">
+                  {/* Video player will go here */}
+                </div>
+              </ContentBlock>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-600">
+                왼쪽 사이드바에서 포트폴리오를 선택하세요.
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>

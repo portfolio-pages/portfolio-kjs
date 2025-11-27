@@ -4,4 +4,6 @@ export { NavSectionTitle } from "./NavSectionTitle";
 export { NavSection, type NavSectionItem } from "./NavSection";
 export { ProfileCard } from "./ProfileCard";
 export { SideBar, type SideBarSection } from "./SideBar";
+export { PortfolioHeader } from "./PortfolioHeader";
+export { ContentBlock } from "./ContentBlock";
 
