@@ -7,6 +7,10 @@ export interface NavSectionItem {
   id: string;
   title: string;
   hashtags: string[];
+  createdAt?: string;
+  joinRole?: string;
+  description?: string;
+  videoId?: string;
 }
 
 interface NavSectionProps {

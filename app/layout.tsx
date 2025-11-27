@@ -28,6 +28,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#fafafa]`}
       >
         {children}
+        <div
+          className="absolute bottom-0 right-0 w-full h-full bg-no-repeat bg-bottom-right bg-contain pointer-events-none"
+          style={{
+            backgroundImage: "url('/background.png')",
+          }}
+        />
       </body>
     </html>
   );

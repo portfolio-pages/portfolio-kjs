@@ -19,6 +19,10 @@ export default function Home() {
           id: "1",
           title: "겁나게_기깔나는_포폴_이름",
           hashtags: ["HASHTAG_1", "HASHTAG_2", "HASHTAG_3"],
+          createdAt: "Nov 25, 2025",
+          joinRole: "Developer",
+          description: "이 작품은 매우 기깔나는 포트폴리오입니다.",
+          videoId: "video-1",
         },
         {
           id: "2",
@@ -123,8 +127,12 @@ export default function Home() {
 
   const handleItemClick = (item: NavSectionItem) => {
     setSelectedItemId(item.id);
-    // TODO: 메인 콘텐츠 영역에 선택된 아이템 표시
   };
+
+  // 선택된 아이템 찾기
+  const selectedItem = sections
+    .flatMap((section) => section.items)
+    .find((item) => item.id === selectedItemId);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -146,14 +154,14 @@ export default function Home() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-[#fafafa]">
-        <div className="p-8">
-          {selectedItemId ? (
+      <main className="flex-1 overflow-y-auto bg-[#fafafa] relative">
+        <div className="p-8 relative z-10">
+          {selectedItem ? (
             <div className="flex flex-col gap-8">
               <PortfolioHeader
-                title="겁나게_기깔나는_포폴_이름"
-                createdAt="Nov 25, 2025"
-                joinRole="Developer"
+                title={selectedItem.title}
+                createdAt={selectedItem.createdAt || "N/A"}
+                joinRole={selectedItem.joinRole || "N/A"}
               />
               
               <ContentBlock
@@ -161,7 +169,9 @@ export default function Home() {
                 subtitle="작품 소개"
               >
                 <div className="rounded-lg bg-white p-6 min-h-[200px]">
-                  {/* Description content will go here */}
+                  {selectedItem.description || (
+                    <p className="text-gray-400">설명이 없습니다.</p>
+                  )}
                 </div>
               </ContentBlock>
 
@@ -169,8 +179,12 @@ export default function Home() {
                 title="Content"
                 subtitle="작품 내용"
               >
-                <div className="rounded-lg bg-white p-6">
-                  {/* Video player will go here */}
+                <div className="rounded-lg p-6">
+                  {selectedItem.videoId ? (
+                    <p className="text-gray-400">비디오 ID: {selectedItem.videoId}</p>
+                  ) : (
+                    <p className="text-gray-400">비디오가 없습니다.</p>
+                  )}
                 </div>
               </ContentBlock>
             </div>
