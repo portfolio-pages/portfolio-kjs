@@ -11,11 +11,13 @@ import type { NavSectionItem } from "@/features/portfolio/components";
 export default function Home() {
   const [selectedItemId, setSelectedItemId] = useState<string | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [originalSections, setOriginalSections] = useState<SideBarSection[]>([]);
   const [sections, setSections] = useState<SideBarSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | undefined>();
 
   useEffect(() => {
     const fetchSections = async () => {
@@ -29,6 +31,7 @@ export default function Home() {
         }
         
         const data = await response.json();
+        setOriginalSections(data);
         setSections(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -39,6 +42,27 @@ export default function Home() {
     };
 
     fetchSections();
+  }, []);
+
+  // 프로필 이미지 가져오기
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      try {
+        const response = await fetch("/api/profile/image");
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile image");
+        }
+        
+        const data = await response.json();
+        setProfileImage(data.imageUrl || undefined);
+      } catch (err) {
+        console.error("Error fetching profile image:", err);
+        // 에러가 발생해도 계속 진행 (프로필 이미지는 선택사항)
+      }
+    };
+
+    fetchProfileImage();
   }, []);
 
   const handleSectionToggle = (sectionId: string) => {
@@ -94,8 +118,44 @@ export default function Home() {
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    // TODO: 검색 기능 구현
   };
+
+  // 검색 쿼리에 따라 섹션 필터링
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      // 검색어가 없으면 원본 데이터 표시
+      setSections(originalSections);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    
+    // 각 섹션의 아이템들을 필터링
+    const filteredSections: SideBarSection[] = originalSections
+      .map((section) => {
+        // 제목 또는 해시태그에 검색어가 포함된 아이템만 필터링
+        const filteredItems = section.items.filter((item) => {
+          const titleMatch = item.title.toLowerCase().includes(query);
+          const hashtagMatch = item.hashtags.some((tag) =>
+            tag.toLowerCase().includes(query)
+          );
+          return titleMatch || hashtagMatch;
+        });
+
+        // 필터링된 아이템이 있는 경우에만 섹션 반환
+        if (filteredItems.length > 0) {
+          return {
+            ...section,
+            items: filteredItems,
+            status: "opened" as "opened" | "closed", // 검색 결과는 자동으로 열림
+          };
+        }
+        return null;
+      })
+      .filter((section): section is SideBarSection => section !== null);
+
+    setSections(filteredSections);
+  }, [searchQuery, originalSections]);
 
   if (isLoading) {
     return (
@@ -125,6 +185,7 @@ export default function Home() {
     <div className="flex h-screen overflow-hidden bg-[#fafafa] px-4 py-4 box-border">
       {/* SideBar */}
       <SideBar
+        profileImage={profileImage}
         name="Jinseo Kim"
         year="2025"
         sections={sections}
