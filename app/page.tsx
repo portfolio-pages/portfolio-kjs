@@ -218,13 +218,18 @@ export default function Home() {
                 title="Content"
                 subtitle="작품 내용"
               >
-                <div className="rounded-lg p-6">
-                  {selectedItem.videoId ? (
-                    <VideoPlayer videoId={selectedItem.videoId} />
-                  ) : (
-                    <p className="text-gray-400">비디오가 없습니다.</p>
-                  )}
-                </div>
+                {(isExpanded) => (
+                  <div className="rounded-lg p-6">
+                    {selectedItem.videoId ? (
+                      <VideoPlayer
+                        videoId={selectedItem.videoId}
+                        isExpanded={isExpanded}
+                      />
+                    ) : (
+                      <p className="text-gray-400">비디오가 없습니다.</p>
+                    )}
+                  </div>
+                )}
               </ContentBlock>
             </div>
           ) : (

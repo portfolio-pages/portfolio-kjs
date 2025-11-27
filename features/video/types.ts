@@ -14,5 +14,6 @@ export interface VideoPlayerProps {
   autoPlay?: boolean;
   controls?: boolean;
   muted?: boolean;
+  isExpanded?: boolean;
 }
 
