@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portfolio-video-config
+  labels:
+    app: portfolio-video
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+

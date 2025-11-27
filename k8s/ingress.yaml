@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portfolio-video-ingress
+  labels:
+    app: portfolio-video
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # cert-manager를 사용하는 경우
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: portfolio.example.com  # 실제 도메인으로 변경 필요
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: portfolio-video-service
+            port:
+              number: 80
+  # TLS 설정 (선택사항)
+  # tls:
+  # - hosts:
+  #   - portfolio.example.com
+  #   secretName: portfolio-video-tls
+
