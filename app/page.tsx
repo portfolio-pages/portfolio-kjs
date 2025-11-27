@@ -14,6 +14,8 @@ export default function Home() {
   const [sections, setSections] = useState<SideBarSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
 
   useEffect(() => {
     const fetchSections = async () => {
@@ -60,6 +62,35 @@ export default function Home() {
   const selectedItem = sections
     .flatMap((section) => section.items)
     .find((item) => item.id === selectedItemId);
+
+  // videoId가 변경될 때마다 이미지 가져오기
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!selectedItem?.videoId) {
+        setImages([]);
+        return;
+      }
+
+      try {
+        setIsLoadingImages(true);
+        const response = await fetch(`/api/portfolio/images/${selectedItem.videoId}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch images");
+        }
+        
+        const imageList = await response.json();
+        setImages(imageList);
+      } catch (err) {
+        console.error("Error fetching images:", err);
+        setImages([]);
+      } finally {
+        setIsLoadingImages(false);
+      }
+    };
+
+    fetchImages();
+  }, [selectedItem?.videoId]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -125,13 +156,17 @@ export default function Home() {
                   )}
                 </div>
               </ContentBlock>
-              {selectedItem.images && selectedItem.images.length > 0 && (
+              {images.length > 0 && (
                 <ContentBlock
                   title="Gallery"
                   subtitle="갤러리"
                 >
                   <div className="rounded-lg p-6">
-                    <ImageGallery images={selectedItem.images} />
+                    {isLoadingImages ? (
+                      <p className="text-gray-400 text-center py-8">이미지 로딩 중...</p>
+                    ) : (
+                      <ImageGallery images={images} />
+                    )}
                   </div>
                 </ContentBlock>
               )}
