@@ -11,6 +11,7 @@ export interface NavSectionItem {
   joinRole?: string;
   description?: string;
   videoId?: string;
+  images?: string[];
 }
 
 interface NavSectionProps {

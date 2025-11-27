@@ -4,6 +4,8 @@ import { useState } from "react";
 import { SideBar, type SideBarSection } from "@/features/portfolio/components/SideBar";
 import { PortfolioHeader } from "@/features/portfolio/components/PortfolioHeader";
 import { ContentBlock } from "@/features/portfolio/components/ContentBlock";
+import { ImageGallery } from "@/features/portfolio/components/ImageGallery";
+import { VideoPlayer } from "@/features/video/components/VideoPlayer";
 import type { NavSectionItem } from "@/features/portfolio/components";
 
 export default function Home() {
@@ -22,7 +24,35 @@ export default function Home() {
           createdAt: "Nov 25, 2025",
           joinRole: "Developer",
           description: "이 작품은 매우 기깔나는 포트폴리오입니다.",
-          videoId: "video-1",
+          videoId: "pf1.mp4",
+          images: [
+            "/images/너의 이름 청춘.00_00_03_15.Still001.jpg",
+            "/images/너의 이름 청춘.00_00_07_13.Still002.jpg",
+            "/images/너의 이름 청춘.00_00_09_09.Still003.jpg",
+            "/images/너의 이름 청춘.00_00_19_10.Still004.jpg",
+            "/images/너의 이름 청춘.00_00_20_00.Still005.jpg",
+            "/images/너의 이름 청춘.00_00_26_06.Still006.jpg",
+            "/images/너의 이름 청춘.00_00_29_20.Still007.jpg",
+            "/images/너의 이름 청춘.00_00_55_04.Still008.jpg",
+            "/images/너의 이름 청춘.00_01_04_11.Still009.jpg",
+            "/images/너의 이름 청춘.00_01_06_22.Still010.jpg",
+            "/images/너의 이름 청춘.00_01_34_02.Still011.jpg",
+            "/images/너의 이름 청춘.00_01_36_12.Still012.jpg",
+            "/images/너의 이름 청춘.00_01_38_08.Still013.jpg",
+            "/images/너의 이름 청춘.00_01_45_11.Still014.jpg",
+            "/images/너의 이름 청춘.00_01_52_02.Still015.jpg",
+            "/images/너의 이름 청춘.00_01_57_11.Still016.jpg",
+            "/images/너의 이름 청춘.00_02_08_10.Still017.jpg",
+            "/images/너의 이름 청춘.00_02_27_14.Still018.jpg",
+            "/images/너의 이름 청춘.00_02_28_23.Still019.jpg",
+            "/images/너의 이름 청춘.00_02_34_15.Still020.jpg",
+            "/images/너의 이름 청춘.00_02_36_04.Still021.jpg",
+            "/images/너의 이름 청춘.00_02_38_08.Still022.jpg",
+            "/images/너의 이름 청춘.00_02_47_14.Still023.jpg",
+            "/images/너의 이름 청춘.00_02_51_16.Still024.jpg",
+            "/images/너의 이름 청춘.00_03_12_18.Still025.jpg",
+            "/images/너의 이름 청춘.00_03_36_01.Still026.jpg"
+          ],
         },
         {
           id: "2",
@@ -174,14 +204,23 @@ export default function Home() {
                   )}
                 </div>
               </ContentBlock>
-
+              {selectedItem.images && selectedItem.images.length > 0 && (
+                <ContentBlock
+                  title="Gallery"
+                  subtitle="갤러리"
+                >
+                  <div className="rounded-lg p-6">
+                    <ImageGallery images={selectedItem.images} />
+                  </div>
+                </ContentBlock>
+              )}
               <ContentBlock
                 title="Content"
                 subtitle="작품 내용"
               >
                 <div className="rounded-lg p-6">
                   {selectedItem.videoId ? (
-                    <p className="text-gray-400">비디오 ID: {selectedItem.videoId}</p>
+                    <VideoPlayer videoId={selectedItem.videoId} />
                   ) : (
                     <p className="text-gray-400">비디오가 없습니다.</p>
                   )}
