@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio-video
+  namespace: argocd  # ArgoCD가 설치된 네임스페이스
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/portfolio-pages/portfolio-kjs  # 실제 Git 저장소 URL로 변경
+    targetRevision: main
+    # 방법 1: 개별 파일 직접 사용 (권장)
+    path: k8s
+    # 방법 2: Kustomize 사용
+    # path: k8s
+    # kustomize:
+    #   path: k8s
+    #   kustomizeOptions:
+    #     buildOptions: "--load-restrictor LoadRestrictionsNone"
+    
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default  # 배포할 네임스페이스
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+

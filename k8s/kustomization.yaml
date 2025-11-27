@@ -13,8 +13,10 @@ resources:
 commonLabels:
   app: portfolio-video
 
-images:
-  - name: portfolio-video
-    newName: <registry>/portfolio-video
-    newTag: latest
+# 이미지 설정은 주석 처리 (로컬 이미지 사용 시)
+# 원격 레지스트리 사용 시 아래 주석을 해제하고 실제 레지스트리 주소로 변경하세요
+# images:
+#   - name: portfolio-video
+#     newName: your-registry.com/portfolio-video
+#     newTag: latest
 

@@ -12,6 +12,25 @@
 
 ## 배포 방법
 
+### ArgoCD 사용 (GitOps)
+
+ArgoCD를 사용한 배포는 [k8s/argocd/README.md](argocd/README.md)를 참조하세요.
+
+**빠른 시작:**
+```bash
+# 1. 로컬 이미지 빌드 및 모든 노드에 로드
+chmod +x k8s/argocd/prepare-local-image.sh
+./k8s/argocd/prepare-local-image.sh
+
+# 2. Git에 커밋 및 푸시
+git add k8s/
+git commit -m "Add manifests"
+git push origin main
+
+# 3. ArgoCD Application 생성
+kubectl apply -f k8s/argocd/application.yaml
+```
+
 ### 방법 1: 원격 레지스트리 사용 (프로덕션)
 
 1. **Docker 이미지 빌드 및 푸시**
@@ -105,12 +124,34 @@ kubectl apply -f k8s/service.yaml
 
 **중요:** 로컬 이미지 사용 시 `deployment.local.yaml`을 사용하세요. 이 파일은 `imagePullPolicy: Never`로 설정되어 있어 원격 레지스트리에서 이미지를 가져오지 않습니다.
 
+### Kustomize 사용
+
+**로컬 이미지 사용:**
+```bash
+kubectl apply -k k8s/kustomization.local.yaml
+```
+
+**원격 레지스트리 사용:**
+1. `kustomization.yaml`의 `images` 섹션 주석을 해제하고 실제 레지스트리 주소로 변경
+2. `kubectl apply -k k8s/`
+
 ## 설정 변경
 
 ### 이미지 태그 변경
+
+**직접 배포 시:**
 `deployment.yaml`의 `image` 필드를 수정하세요:
 ```yaml
-image: <registry>/portfolio-video:<tag>
+image: your-registry.com/portfolio-video:tag
+```
+
+**Kustomize 사용 시:**
+`kustomization.yaml`의 `images` 섹션을 수정하세요:
+```yaml
+images:
+  - name: portfolio-video
+    newName: your-registry.com/portfolio-video
+    newTag: tag
 ```
 
 ### 리소스 제한 조정
