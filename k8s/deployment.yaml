@@ -16,6 +16,29 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-secret
+      
+      volumes:
+      - name: portfolio-kjs-data-volume
+        persistentVolumeClaim:
+          claimName: portfolio-kjs-data-pvc
+      - name: portfolio-kjs-image-volume
+        persistentVolumeClaim:
+          claimName: portfolio-kjs-image-pvc
+      - name: portfolio-kjs-profile-volume
+        persistentVolumeClaim:
+          claimName: portfolio-kjs-profile-pvc
+      - name: portfolio-kjs-video-volume
+        persistentVolumeClaim:
+          claimName: portfolio-kjs-video-pvc
+      
+      initContainers:
+      - name: init-portfolio-kjs-data
+        image: busybox
+        command: ['sh', '-c', "echo '{}' > /data/sections.json"] # 여기에 cp 명령 등을 사용
+        volumeMounts:
+        - name: portfolio-kjs-data-volume
+          mountPath: /data  # PVC를 임시로 여기에 마운트
+      
       containers:
       - name: portfolio-kjs-container
         image: ghcr.io/portfolio-pages/portfolio-kjs:8c9fc9881cd61556adb97eef7c40b04d6e9b4550
@@ -28,6 +51,15 @@ spec:
           requests:
             memory: "256Mi"
             cpu: "250m"
+        volumeMounts:
+        - name: portfolio-kjs-data-volume
+          mountPath: /app/data
+        - name: portfolio-kjs-image-volume
+          mountPath: /app/public/images
+        - name: portfolio-kjs-profile-volume
+          mountPath: /app/public/profile
+        - name: portfolio-kjs-video-volume
+          mountPath: /app/public/videos
         livenessProbe:
           httpGet:
             path: /
