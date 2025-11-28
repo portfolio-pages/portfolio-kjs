@@ -35,7 +35,22 @@ spec:
       initContainers:
       - name: init-portfolio-kjs-data
         image: busybox
-        command: ['sh', '-c', "echo '{}' > /data/sections.json"] # 여기에 cp 명령 등을 사용
+        command:
+        - sh
+        - -c
+        - |
+          if [ ! -f /data/sections.json ]; then
+            cat > /data/sections.json <<'EOF'
+          [
+            {
+              "id": "section-1764264077735",
+              "name": "#뮤직비디오",
+              "status": "closed",
+              "items": []
+            }
+          ]
+          EOF
+          fi
         volumeMounts:
         - name: portfolio-kjs-data-volume
           mountPath: /data  # PVC를 임시로 여기에 마운트
