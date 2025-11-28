@@ -57,7 +57,7 @@ spec:
       
       containers:
       - name: portfolio-kjs-container
-        image: ghcr.io/portfolio-pages/portfolio-kjs:54b6161ce70bfa0a34e0dd8279c7edc39c6d91f7
+        image: ghcr.io/portfolio-pages/portfolio-kjs:59e466fc889becebd8830e702940897cc19f8e05
         ports:
         - containerPort: 3000
         resources:
