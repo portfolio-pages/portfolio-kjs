@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: portfolio-kjs-ingress
+  namespace: kjs
   annotations:
     # kubernetes.io/ingress.class: nginx
     kubernetes.io/ingress.class: traefik
