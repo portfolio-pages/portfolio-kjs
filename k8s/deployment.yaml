@@ -18,18 +18,18 @@ spec:
         - name: ghcr-secret
       
       volumes:
-      - name: portfolio-kjs-data-volume
-        persistentVolumeClaim:
-          claimName: portfolio-kjs-data-pvc
-      - name: portfolio-kjs-image-volume
-        persistentVolumeClaim:
-          claimName: portfolio-kjs-image-pvc
-      - name: portfolio-kjs-profile-volume
-        persistentVolumeClaim:
-          claimName: portfolio-kjs-profile-pvc
-      - name: portfolio-kjs-video-volume
-        persistentVolumeClaim:
-          claimName: portfolio-kjs-video-pvc
+        - name: portfolio-kjs-data-volume
+          persistentVolumeClaim:
+            claimName: portfolio-kjs-data-pvc
+        - name: portfolio-kjs-image-volume
+          persistentVolumeClaim:
+            claimName: portfolio-kjs-image-pvc
+        - name: portfolio-kjs-profile-volume
+          persistentVolumeClaim:
+            claimName: portfolio-kjs-profile-pvc
+        - name: portfolio-kjs-video-volume
+          persistentVolumeClaim:
+            claimName: portfolio-kjs-video-pvc
       
       initContainers:
       - name: init-portfolio-kjs-data
