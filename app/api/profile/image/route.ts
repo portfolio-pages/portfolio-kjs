@@ -27,48 +27,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ imageUrl: null });
     }
 
-    // 쿼리 파라미터로 파일 직접 반환 요청 확인
-    const { searchParams } = new URL(request.url);
-    const returnFile = searchParams.get("file") === "true";
-
-    if (returnFile) {
-      // 이미지 파일 직접 반환
-      const imageFileName = imageFiles[0];
-      const imagePath = path.join(profileDir, imageFileName);
-      
-      try {
-        const imageBuffer = await fs.readFile(imagePath);
-        const ext = path.extname(imageFileName).toLowerCase();
-        
-        // Content-Type 결정
-        const contentTypeMap: Record<string, string> = {
-          ".jpg": "image/jpeg",
-          ".jpeg": "image/jpeg",
-          ".png": "image/png",
-          ".gif": "image/gif",
-          ".webp": "image/webp",
-          ".svg": "image/svg+xml",
-        };
-        
-        const contentType = contentTypeMap[ext] || "image/jpeg";
-        
-        return new NextResponse(imageBuffer, {
-          headers: {
-            "Content-Type": contentType,
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
-        });
-      } catch (error) {
-        console.error("Error reading image file:", error);
-        return NextResponse.json(
-          { error: "Failed to read image file" },
-          { status: 500 }
-        );
-      }
-    }
-
     // 첫 번째 이미지 파일 반환 (여러 개가 있으면 첫 번째 것 사용)
-    const imageUrl = `/api/profile/image?file=true`;
+    const imageUrl = `/api/profile/image/file`;
     
     return NextResponse.json({ imageUrl });
   } catch (error) {
@@ -132,7 +92,7 @@ export async function POST(request: NextRequest) {
     const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
     await fs.writeFile(imagePath, imageBuffer);
 
-    const imageUrl = `/api/profile/image?file=true`;
+    const imageUrl = `/api/profile/image/file`;
     
     return NextResponse.json({
       success: true,

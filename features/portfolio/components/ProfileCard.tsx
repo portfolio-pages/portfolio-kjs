@@ -32,6 +32,7 @@ export function ProfileCard({
             alt={name}
             fill
             className="object-cover"
+            unoptimized
           />
         </div>
       ) : (
