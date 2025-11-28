@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import type { SideBarSection, NavSectionItem } from "@/features/portfolio/components/SideBar";
+import type { SideBarSection } from "@/features/portfolio/components/SideBar";
+import type { NavSectionItem } from "@/features/portfolio/components";
 
 export async function POST(request: NextRequest) {
   try {
