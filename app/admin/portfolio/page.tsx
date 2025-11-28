@@ -23,9 +23,12 @@ export default function AdminPortfolioPage() {
   const [newSectionName, setNewSectionName] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSections, setIsLoadingSections] = useState(true);
   const [isAddingSection, setIsAddingSection] = useState(false);
+  const [isUploadingProfile, setIsUploadingProfile] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const fetchSections = async () => {
@@ -57,9 +60,22 @@ export default function AdminPortfolioPage() {
     }
   };
 
+  const fetchProfileImage = async () => {
+    try {
+      const response = await fetch("/api/profile/image");
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentProfileImage(data.imageUrl);
+      }
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
+    }
+  };
+
   useEffect(() => {
     fetchSections();
     fetchAllSections();
+    fetchProfileImage();
   }, []);
 
   const handleInputChange = (
@@ -80,6 +96,47 @@ export default function AdminPortfolioPage() {
   const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setImageFiles(Array.from(e.target.files));
+    }
+  };
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfileImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleProfileImageUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profileImageFile) return;
+
+    setIsUploadingProfile(true);
+    setMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("image", profileImageFile);
+
+      const response = await fetch("/api/profile/image", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to upload profile image");
+      }
+
+      setMessage({ type: "success", text: "프로필 이미지가 성공적으로 업로드되었습니다!" });
+      setProfileImageFile(null);
+      fetchProfileImage();
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.",
+      });
+    } finally {
+      setIsUploadingProfile(false);
     }
   };
 
@@ -249,6 +306,46 @@ export default function AdminPortfolioPage() {
     <div className="min-h-screen bg-[#fafafa] p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-3xl font-bold text-gray-900">포트폴리오 관리</h1>
+
+        {/* 프로필 이미지 업로드 */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">프로필 이미지 업로드</h2>
+          {currentProfileImage && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">현재 프로필 이미지:</p>
+              <img
+                src={currentProfileImage}
+                alt="Profile"
+                className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+              />
+            </div>
+          )}
+          <form onSubmit={handleProfileImageUpload} className="flex gap-4 items-end">
+            <div className="flex-1">
+              <label htmlFor="profileImage" className="block text-sm font-medium text-gray-700 mb-2">
+                프로필 이미지 선택
+              </label>
+              <input
+                type="file"
+                id="profileImage"
+                name="profileImage"
+                accept="image/*"
+                onChange={handleProfileImageChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              {profileImageFile && (
+                <p className="mt-2 text-sm text-gray-600">선택된 파일: {profileImageFile.name}</p>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={isUploadingProfile || !profileImageFile}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              {isUploadingProfile ? "업로드 중..." : "업로드"}
+            </button>
+          </form>
+        </div>
 
         {/* 섹션 추가 */}
         <div className="bg-white rounded-lg shadow-sm p-6">
