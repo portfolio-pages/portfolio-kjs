@@ -14,6 +14,8 @@ spec:
       labels:
         app: portfolio-kjs
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
       - name: portfolio-kjs-container
         image: ghcr.io/portfolio-pages/portfolio-kjs:21f9517e5f7d2d774eb2068073f8739838cdb3e9
