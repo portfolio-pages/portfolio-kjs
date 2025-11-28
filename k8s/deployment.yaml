@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: portfolio-kjs-container
-        image: ghcr.io/project-pages/portfolio-kjs:latest
+        image: ghcr.io/portfolio-pages/portfolio-kjs:latest
         ports:
         - containerPort: 3000
         resources:
