@@ -4,17 +4,21 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'k8s/**'
+      - 'README.md'
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  MANIFEST_FILE_PATH: "./k8s/deployment.yaml"
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -67,9 +71,26 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Output image reference
+      - name: Update Kubernetes Manifest
         run: |
-          echo "IMAGE_REF=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
-          echo "Built and pushed: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          # 1. Git 사용자 설정
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+          # 2. 매니페스트 파일 수정 (sed 사용)
+          sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" ${{ env.MANIFEST_FILE_PATH }}
+
+          # 3. 변경 확인
+          echo "Updated content:"
+          grep "image:" ${{ env.MANIFEST_FILE_PATH }}
+
+          # 4. Git Commit & Push
+          # git status로 변경사항이 있는지 확인 후 커밋
+          if [[ -n $(git status -s) ]]; then
+            git add ${{ env.MANIFEST_FILE_PATH }}
+            git commit -m "Update k8s image tag to ${{ github.sha }} [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
 
