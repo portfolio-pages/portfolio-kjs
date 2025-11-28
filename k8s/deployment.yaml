@@ -4,6 +4,14 @@ metadata:
   name: portfolio-video
   labels:
     app: portfolio-video
+  annotations:
+    # ArgoCD Image Updater를 위한 어노테이션
+    # 실제 저장소 경로로 변경 필요: ghcr.io/<org>/<repo>
+    argocd-image-updater.argoproj.io/image-list: portfolio-video=ghcr.io/portfolio-pages/portfolio-kjs
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/portfolio-video.update-strategy: latest
+    argocd-image-updater.argoproj.io/portfolio-video.allow-tags: regexp:^main-.*$
 spec:
   replicas: 2
   selector:
@@ -16,8 +24,8 @@ spec:
     spec:
       containers:
       - name: portfolio-video
-        image: portfolio-video:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/portfolio-pages/portfolio-kjs:latest  # ArgoCD Image Updater가 자동으로 업데이트 (실제 저장소 경로로 변경 필요)
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
           name: http
