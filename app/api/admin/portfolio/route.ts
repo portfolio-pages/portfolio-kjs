@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { randomUUID } from "crypto";
 import type { SideBarSection } from "@/features/portfolio/components/SideBar";
 import type { NavSectionItem } from "@/features/portfolio/components";
 
@@ -27,18 +28,23 @@ export async function POST(request: NextRequest) {
 
     // 비디오 파일 저장
     let videoId: string | undefined;
+    let videoFileName: string | undefined;
     if (videoFile && videoFile.size > 0) {
-      // 원본 파일명 사용 (확장자 포함)
-      const videoName = videoFile.name;
-      videoId = videoName;
+      // 원본 파일명 저장
+      videoFileName = videoFile.name;
+      
+      // UUID 생성 및 확장자 추출
+      const fileExtension = path.extname(videoFileName);
+      const uuid = randomUUID();
+      videoId = `${uuid}${fileExtension}`;
       
       const videoDir = path.join(process.cwd(), "public", "videos");
-      const videoPath = path.join(videoDir, videoName);
+      const videoPath = path.join(videoDir, videoId);
       
       // 디렉토리 확인 및 생성
       await fs.mkdir(videoDir, { recursive: true });
       
-      // 파일 저장
+      // 파일 저장 (UUID로 저장)
       const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
       await fs.writeFile(videoPath, videoBuffer);
     }
@@ -76,6 +82,7 @@ export async function POST(request: NextRequest) {
       ...(joinRole && { joinRole }),
       ...(description && { description }),
       ...(videoId && { videoId }),
+      ...(videoFileName && { videoFileName }),
     };
 
     // 해당 섹션 찾기 및 아이템 추가

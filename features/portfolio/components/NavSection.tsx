@@ -11,6 +11,7 @@ export interface NavSectionItem {
   joinRole?: string;
   description?: string;
   videoId?: string;
+  videoFileName?: string; // 원본 파일명 저장
   images?: string[];
 }
 
