@@ -51,6 +51,14 @@ spec:
           ]
           EOF
           fi
+
+          # [핵심] 소유권을 메인 컨테이너 사용자(nextjs)에게 맞춤
+          echo "Fixing permissions..."
+          chown -R 1001:65533 /data
+          
+          # 혹시 모를 접근 권한 확보 (소유자 읽기/쓰기/실행 가능)
+          chmod -R 755 /data
+          
         volumeMounts:
         - name: portfolio-kjs-data-volume
           mountPath: /data  # PVC를 임시로 여기에 마운트
