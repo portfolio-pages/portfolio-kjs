@@ -33,19 +33,36 @@ export async function POST(request: NextRequest) {
       // 원본 파일명 저장
       videoFileName = videoFile.name;
       
-      // UUID 생성 (확장자 제외, 순수 UUID만)
-      const uuid = randomUUID();
-      videoId = uuid;
-      
       // 확장자 추출
       const fileExtension = path.extname(videoFileName);
       
       const videoDir = path.join(process.cwd(), "public", "videos");
-      // 실제 파일은 {uuid}.{extension} 형태로 저장
-      const videoPath = path.join(videoDir, `${videoId}${fileExtension}`);
-      
       // 디렉토리 확인 및 생성
       await fs.mkdir(videoDir, { recursive: true });
+      
+      // UUID 생성 및 충돌 방지 (파일이 이미 존재하면 새로운 UUID 생성)
+      let uuid: string;
+      let videoPath: string;
+      let maxAttempts = 10; // 최대 10번 시도
+      
+      do {
+        uuid = randomUUID();
+        videoId = uuid;
+        videoPath = path.join(videoDir, `${videoId}${fileExtension}`);
+        
+        // 파일 존재 여부 확인
+        try {
+          await fs.access(videoPath);
+          // 파일이 존재하면 새로운 UUID 생성
+          maxAttempts--;
+          if (maxAttempts <= 0) {
+            throw new Error("Failed to generate unique video ID after multiple attempts");
+          }
+        } catch {
+          // 파일이 없으면 사용 가능한 UUID
+          break;
+        }
+      } while (true);
       
       // 파일 저장
       const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
