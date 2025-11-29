@@ -40,17 +40,23 @@ export async function DELETE(
 
     // 비디오 및 이미지 파일 삭제
     if (videoId) {
-      const videoPath = path.join(process.cwd(), "public", "videos", videoId);
+      const videoDir = path.join(process.cwd(), "public", "videos");
       const imagesDir = path.join(process.cwd(), "public", "images", videoId);
       
-      // 비디오 파일 삭제
+      // videoId로 확장자를 찾아 비디오 파일 삭제
       try {
-        await fs.access(videoPath);
-        await fs.unlink(videoPath);
-        console.log(`Deleted video file: ${videoPath}`);
+        const files = await fs.readdir(videoDir);
+        const videoFile = files.find((file) => file.startsWith(videoId + "."));
+        if (videoFile) {
+          const videoPath = path.join(videoDir, videoFile);
+          await fs.unlink(videoPath);
+          console.log(`Deleted video file: ${videoPath}`);
+        } else {
+          console.log(`Video file not found for videoId: ${videoId}`);
+        }
       } catch (error) {
         // 파일이 없으면 무시
-        console.log(`Video file not found: ${videoPath}`);
+        console.log(`Error deleting video file for videoId ${videoId}:`, error);
       }
       
       // 이미지 디렉토리 삭제

@@ -97,7 +97,9 @@ export default function Home() {
 
       try {
         setIsLoadingImages(true);
-        const response = await fetch(`/api/portfolio/images/${selectedItem.videoId}`);
+        // videoId를 URL 인코딩하여 특수문자 처리
+        const encodedVideoId = encodeURIComponent(selectedItem.videoId);
+        const response = await fetch(`/api/portfolio/images/${encodedVideoId}`);
         
         if (!response.ok) {
           throw new Error("Failed to fetch images");

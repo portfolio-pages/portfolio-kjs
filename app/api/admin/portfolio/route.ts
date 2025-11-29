@@ -33,18 +33,21 @@ export async function POST(request: NextRequest) {
       // 원본 파일명 저장
       videoFileName = videoFile.name;
       
-      // UUID 생성 및 확장자 추출
-      const fileExtension = path.extname(videoFileName);
+      // UUID 생성 (확장자 제외, 순수 UUID만)
       const uuid = randomUUID();
-      videoId = `${uuid}${fileExtension}`;
+      videoId = uuid;
+      
+      // 확장자 추출
+      const fileExtension = path.extname(videoFileName);
       
       const videoDir = path.join(process.cwd(), "public", "videos");
-      const videoPath = path.join(videoDir, videoId);
+      // 실제 파일은 {uuid}.{extension} 형태로 저장
+      const videoPath = path.join(videoDir, `${videoId}${fileExtension}`);
       
       // 디렉토리 확인 및 생성
       await fs.mkdir(videoDir, { recursive: true });
       
-      // 파일 저장 (UUID로 저장)
+      // 파일 저장
       const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
       await fs.writeFile(videoPath, videoBuffer);
     }

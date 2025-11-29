@@ -10,17 +10,57 @@ export async function GET(
     const { videoId } = await params;
 
     // 보안: 경로 탐색 공격 방지 (../, / 등 제거)
-    const sanitizedFileName = path.basename(videoId);
-    if (sanitizedFileName !== videoId || videoId.includes("..") || videoId.includes("/")) {
+    const sanitizedVideoId = path.basename(videoId);
+    if (sanitizedVideoId !== videoId || videoId.includes("..") || videoId.includes("/")) {
       return new NextResponse("Invalid video ID", { status: 400 });
     }
 
-    // 파일 경로 구성 (public/videos/ 디렉토리)
-    const videoPath = path.join(process.cwd(), "public", "videos", sanitizedFileName);
+    // videoId는 순수 UUID이므로 확장자를 찾아야 함
+    // sections.json에서 videoFileName을 찾거나, 파일 시스템에서 찾기
+    const videoDir = path.join(process.cwd(), "public", "videos");
+    
+    // 파일 시스템에서 {videoId}.* 패턴으로 파일 찾기
+    let videoPath: string | null = null;
+    try {
+      const files = await fs.readdir(videoDir);
+      const videoFile = files.find((file) => file.startsWith(sanitizedVideoId + "."));
+      if (videoFile) {
+        videoPath = path.join(videoDir, videoFile);
+      }
+    } catch (error) {
+      console.error("Error reading video directory:", error);
+    }
+
+    // 파일을 찾지 못한 경우 sections.json에서 확장자 찾기
+    if (!videoPath) {
+      try {
+        const sectionsFilePath = path.join(process.cwd(), "data", "sections.json");
+        const sectionsContent = await fs.readFile(sectionsFilePath, "utf8");
+        const sections = JSON.parse(sectionsContent);
+        
+        // 모든 섹션의 아이템에서 videoId로 찾기
+        for (const section of sections) {
+          for (const item of section.items || []) {
+            if (item.videoId === sanitizedVideoId && item.videoFileName) {
+              const fileExtension = path.extname(item.videoFileName);
+              videoPath = path.join(videoDir, `${sanitizedVideoId}${fileExtension}`);
+              break;
+            }
+          }
+          if (videoPath) break;
+        }
+      } catch (error) {
+        console.error("Error reading sections.json:", error);
+      }
+    }
+
+    // 여전히 파일을 찾지 못한 경우
+    if (!videoPath) {
+      return new NextResponse("Video file not found", { status: 404 });
+    }
 
     // 파일 존재 여부 확인
     try {
-      console.log(videoPath);
       await fs.access(videoPath);
     } catch {
       return new NextResponse("Video file not found", { status: 404 });
