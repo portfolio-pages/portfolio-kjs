@@ -4,9 +4,13 @@ metadata:
   name: portfolio-kjs-ingress
   namespace: kjs
   annotations:
-    # kubernetes.io/ingress.class: nginx
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  tls:
+  - hosts:
+    - asdf.portfolio-kjs.kro.kr
+    secretName: portfolio-kjs-tls  # 이 이름으로 인증서 Secret이 자동 생성됨
   rules:
   - host: asdf.portfolio-kjs.kro.kr
     http:
