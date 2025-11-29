@@ -50,9 +50,10 @@ export async function GET(
       })
       .sort() // 파일명으로 정렬
       .map((file) => {
-        // Next.js public 폴더는 원본 경로를 사용 (브라우저가 자동으로 인코딩 처리)
-        // 단, 특수문자가 포함된 경우 URL 안전하게 처리
-        return `/images/${sanitizedVideoId}/${file}`;
+        // 이미지 서빙 API를 통해 특수문자가 포함된 파일명 처리
+        const encodedVideoId = encodeURIComponent(sanitizedVideoId);
+        const encodedFileName = encodeURIComponent(file);
+        return `/api/portfolio/images/${encodedVideoId}/${encodedFileName}`;
       });
 
     return NextResponse.json(imageFiles);
